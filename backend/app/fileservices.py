@@ -1,6 +1,6 @@
 import docx
 import csv
-import re
+import re,os
 import traceback
 
 def read_word_file(file_path):
@@ -70,10 +70,13 @@ def parse_questions(content):
 
 def write_to_csv(data, output_file):
     """Write parsed data to CSV file."""
+    dirs = os.path.dirname(output_file)
+    os.makedirs(dirs, exist_ok=True)
     try:
         fieldnames = ['Question', 'Option_A', 'Option_B', 'Option_C', 'Option_D', 'Correct_Answer', 'Explanation']
         
         with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
+
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
@@ -102,13 +105,5 @@ def convert_word_to_csv(input_file, output_file):
         print(traceback.format_exc())
         return f"Error during conversion: {str(e)}"
 
-if __name__ == "__main__":
-    try:
-        input_file = "SS3_Econs.docx"
-        output_file = "questions.csv"
-        result = convert_word_to_csv(input_file, output_file)
-        print(result)
-    except Exception as e:
-        print(f"Main error: {str(e)}")
-        print("Full error:")
-        print(traceback.format_exc())
+
+__all__ = ["convert_word_to_csv"]
