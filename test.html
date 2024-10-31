@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<for>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="form">
+        <input type="file" id="file">
+        <button id = "submit">UPload</button>
+    </form>
+</body>
+<script>
+    const bodyData = new FormData()
+    const submitBtn = document.querySelector("#submit")
+    submitBtn.addEventListener("click", (event) => {
+        event.preventDefault()
+        const fileInput = document.querySelector("#form").file.files[0]
+        bodyData.append("file",fileInput)
+        fetch("http://localhost:8000/file/upload",{
+            method:"POST",
+            body:bodyData
+            
+
+        })
+        .then(data => {
+            return data.json()
+        })
+        .then(data => {
+            const download_btn = document.createElement("a")
+            download_btn.href = `http://localhost:8000/get/file/${data.filename}`
+            download_btn.text = "Download"
+            document.querySelector("body").appendChild(download_btn)
+        })
+    })
+</script>
+</html>
